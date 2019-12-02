@@ -5,6 +5,6 @@ haskell - 1
 nim
 racket
 raku
-ruby
+ruby - 2
 scopes
 smalltalk/pharo
