@@ -9,12 +9,11 @@ def run(program, noun, verb)
   pc = 0
 
   while program[pc] != 99 do
+    a, b, dest = program[pc+1..pc+4]
     case program[pc]
     when 1
-      a, b, dest = program[pc+1..pc+4]
       program[dest] = program[a] + program[b]
     when 2
-      a, b, dest = program[pc+1..pc+4]
       program[dest] = program[a] * program[b]
     else
       puts program.to_s
