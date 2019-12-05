@@ -8,15 +8,15 @@ fn six(n)
     true
 
 fn adj(n)
-    loop (n prev = n -1)
+    loop (n prev prev2 prev3 = n -1 -2 -3)
         let this = (n % 10)
         let next = (n // 10)
-        if (this == prev)
+        if ((this != prev) and (prev == prev2) and (prev2 != prev3))
             break true
         elseif (n >= 10)
-            repeat next this
+            repeat next this prev prev2
         else
-            break false
+            break ((this == prev) and (prev != prev2))
 
 fn adj3(n)
     loop (n prev prev2 = n -1 -2)
@@ -46,17 +46,23 @@ fn calc(min max)
             print "finished"
             print count
             break a count
-        elseif ((six a) and (adj a) and (neverdec a) and (not (adj3 a)))
+        elseif ((six a) and (adj a) and (neverdec a))
             repeat (a + 1) (count + 1)
         else
             repeat (a + 1) count
 
 print "adj"
-print (adj 11234) true
-print (adj 12234) true
-print (adj 12334) true
-print (adj 12344) true
-print (adj 12345) false
+print (adj 011234) true
+print (adj 012234) true
+print (adj 012334) true
+print (adj 012344) true
+print (adj 012345) false
+print (adj 222123) false
+print (adj 222122) true
+print (adj 222144) true
+print (adj 220444) true
+print (adj 120004) false
+print (adj 120004) false
 
 print "neverdec"
 print (neverdec 12345) true
@@ -64,14 +70,6 @@ print (neverdec 12340) false
 print (neverdec 11111) true
 print (neverdec 10234) false
 print (neverdec 12045) false
-
-print "adj3"
-print (adj3 11133) true
-print (adj3 11233) false
-print (adj3 11333) true
-print (adj3 33333) true
-print (adj3 13331) true
-print (adj3 13321) false
 
 print "starting"
 print (calc min max)
