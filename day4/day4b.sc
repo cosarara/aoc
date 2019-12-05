@@ -18,17 +18,6 @@ fn adj(n)
         else
             break ((this == prev) and (prev != prev2))
 
-fn adj3(n)
-    loop (n prev prev2 = n -1 -2)
-        let this = (n % 10)
-        let next = (n // 10)
-        if ((this == prev) and (prev == prev2))
-            break true
-        elseif (n >= 10)
-            repeat next this prev
-        else
-            break false
-
 fn neverdec(n)
     loop (n prev = n 10)
         let this = (n % 10)
