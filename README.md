@@ -1,4 +1,4 @@
-* ada
+* ada - 3
 * clojure
 * d
 * haskell - 1
@@ -6,5 +6,5 @@
 * racket
 * raku
 * ruby - 2
-* scopes
+* scopes - 4
 * smalltalk/pharo
