@@ -1,3 +1,5 @@
+#!/usr/bin/env scopes
+
 let min = 168630
 let max = 718098
 let count = 0
@@ -5,6 +7,8 @@ let count = 0
 fn six(n)
     true
 
+# initially I wanted do convert n to a string and work with that
+# but I didn't manage to find how to do it
 fn adj(n)
     loop (n prev = n -1)
         let this = (n % 10)
