@@ -5,6 +5,6 @@
 * nim
 * racket
 * raku
-* ruby - 2
+* ruby - 2, 5
 * scopes - 4
-* smalltalk/pharo
+* smalltalk/pharo - 6
