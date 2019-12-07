@@ -9,6 +9,7 @@ fn six(n)
 
 # initially I wanted do convert n to a string and work with that
 # but I didn't manage to find how to do it
+# found it in the stdlib, (tostring x)
 fn adj(n)
     loop (n prev prev2 prev3 = n -1 -2 -3)
         let this = (n % 10)
