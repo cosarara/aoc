@@ -124,7 +124,13 @@ class VM
   end
 end
 
+puts "part A"
 vm = VM.new(initial_program, [1]).run
+while (a = vm.resume) do
+  puts a
+end
+puts "part B"
+vm = VM.new(initial_program, [2]).run
 while (a = vm.resume) do
   puts a
 end
