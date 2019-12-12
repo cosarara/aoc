@@ -1,10 +1,10 @@
 * ada - 3
-* clojure
-* d
+* clojure - 8
+* d - 10
 * haskell - 1
 * nim
-* racket
+* racket 2, 5, 7
 * raku
-* ruby - 2, 5
+* ruby - 2, 5, 7, 9
 * scopes - 4
 * smalltalk/pharo - 6
