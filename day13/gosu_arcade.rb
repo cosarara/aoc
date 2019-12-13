@@ -140,7 +140,7 @@ class Arcade < Gosu::Window
     @w = 480
     @h = 320
     #@block_size = 480 / 44
-    super @w, @h, false, 1000/10 # 10 fps
+    super @w, @h, false, 1000/15 # 15 fps
     self.caption = "Arcade"
 
     @initial_program = initial_program
@@ -160,14 +160,17 @@ class Arcade < Gosu::Window
     ball_drawn = false
     (0..23).each { |y|
       (0..43).each { |x|
+        id = @screen[[x, y]]
+        if id == 0
+          next
+        end
         map = {
           0 => Gosu::Color::BLACK, # blank
           1 => Gosu::Color::GRAY, # wall
           2 => Gosu::Color::GREEN, # block
-          3 => Gosu::Color::BLUE, # paddle
+          3 => Gosu::Color::CYAN, # paddle
           4 => Gosu::Color::RED # ball
         }
-        id = @screen[[x, y]]
         tile = map[id]
         if tile.nil?
           return false
@@ -177,7 +180,10 @@ class Arcade < Gosu::Window
           # todo circle
           draw_rect(20 + x*10, 40 + y*10, 10, 10, tile)
         elsif id == 3
-          draw_rect(15 + x*10, 40 + y*10, 20, 4, tile)
+          wx = 10 + x*10
+          wy = 40 + y*10
+          draw_rect(wx, wy, 30, 4, tile)
+          #draw_rect(20 + x*10, 40 + y*10+20, 40, 4, Gosu::Color::CYAN)
         else
           draw_rect(20 + x*10, 40 + y*10, 10, 10, tile)
         end
