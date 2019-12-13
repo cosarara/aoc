@@ -174,8 +174,13 @@ class Arcade < Gosu::Window
         end
         if id == 4
           ball_drawn = true
+          # todo circle
+          draw_rect(20 + x*10, 40 + y*10, 10, 10, tile)
+        elsif id == 3
+          draw_rect(15 + x*10, 40 + y*10, 20, 4, tile)
+        else
+          draw_rect(20 + x*10, 40 + y*10, 10, 10, tile)
         end
-        draw_rect(20 + x*10, 40 + y*10, 10, 10, tile)
       }
     }
   end

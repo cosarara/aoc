@@ -133,7 +133,6 @@ class Arcade
   attr_reader :screen
   def initialize()
     @screen = Hash.new()
-    @right_rotation = [:up, :right, :down, :left];
   end
 
   def display()
