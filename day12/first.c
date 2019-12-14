@@ -49,7 +49,7 @@ int main() {
     int* velocities_ = &velocities[0][0];
 
     long unsigned int step = 0;
-    for (; step<100000000000lu; step++) {
+    for (; step<1000000000lu; step++) {
         int allzero = 1;
         for (int i=0; i<3; i++) { // coord
             for (int j=0; j<4; j++) { // planet
@@ -64,7 +64,8 @@ int main() {
         for (int i=0; i<12; i++) {
             positions_[i] += velocities_[i];
         }
-        if (allzero && memcmp(positions, ipositions, sizeof(positions)) == 0) {
+        //if (allzero && memcmp(positions, ipositions, sizeof(positions)) == 0) {
+        if (allzero) {
             break;
         }
     }
