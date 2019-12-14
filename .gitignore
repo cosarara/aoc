@@ -1,1 +1,14 @@
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.*
+# unignore directories
+!*/
+
+*.o
 *.hi
+vendor/
+*~
+tmp.*
+.ipynb_checkpoints/
