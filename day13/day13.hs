@@ -3,6 +3,7 @@ import qualified Data.Map.Strict as Map
 import Data.Maybe
 import Data.List
 import Data.Ord
+import Control.Concurrent
 
 -- ok this fucking sucks tbh
 split :: String -> Char -> [String]
@@ -231,7 +232,28 @@ amp src phases =
 joystick ball paddle =
     (if ball > paddle then 1 else 0) - (if ball < paddle then 1 else 0)
 
-arcade :: State -> (Map.Map (Int, Int) Int) -> Int -> Int -> (Map.Map (Int, Int) Int)
+tile 0 = " "
+tile 1 = "X"
+tile 2 = "-"
+tile 3 = "_"
+tile 4 = "o"
+tile x = "~"
+
+getTile :: Int -> Int -> Map.Map (Int, Int) Int -> [Char]
+getTile x y screen
+    = tile (Map.findWithDefault (-1) (x, y) screen)
+
+row :: Map.Map (Int, Int) Int -> Int -> [Char]
+row screen y =
+    concat $
+    map (\x -> getTile x y screen) [0..43]
+
+draw :: Map.Map (Int, Int) Int -> [Char]
+draw screen =
+    intercalate "\n" $
+    map (row screen) [0..23]
+
+arcade :: State -> (Map.Map (Int, Int) Int) -> Int -> Int -> [(Map.Map (Int, Int) Int)]
 arcade state screen ball paddle =
     let
         sx = inOut state (Just $ joystick ball paddle)
@@ -245,19 +267,30 @@ arcade state screen ball paddle =
         paddle' = if t == 3 then x else paddle
     in
         if (running sx) && (running sy) && (running st)
-        then arcade st screen' ball' paddle'
-        else screen'
+        then screen':arcade st screen' ball' paddle'
+        else screen':[]
 
 count pred = length . filter pred
 countBlocks screen = count (\x -> x == 2) $ Map.elems screen
+
+display screen = do
+    let rendered = draw screen
+    let score = "Score: " ++ (show $ Map.findWithDefault 0 (-1, 0) screen) ++ "\n"
+    if ('o' `elem` rendered && '_' `elem` rendered && not ('~' `elem` rendered))
+        then do putStrLn $ concat (replicate 50 "\n") ++ score ++ (draw screen)
+                threadDelay 50000
+        else return ()
 
 main = do
     src <- getContents
     let state = initState src (Just 1)
     let screen = Map.empty
     print "part A"
-    print $ countBlocks $ arcade state screen 0 0
+    print $ countBlocks $ last $ arcade state screen 0 0
     print "part B"
     let stateQuarter = state {mem=writem state 0 2}
-    let outScreen = arcade stateQuarter screen 0 0
+    let outScreens = arcade stateQuarter screen 0 0
+    let outScreen = last outScreens
     print $ Map.findWithDefault (-3) (-1, 0) outScreen
+    mapM_ display outScreens
+    --putStrLn $ draw outScreen
