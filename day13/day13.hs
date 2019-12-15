@@ -149,22 +149,6 @@ do_op x state = error "bad instruction"
 
 getop state = (readm state (pc state)) `mod` 100
 
-execute state out =
-    --trace (show mem) $
-    --trace ("pc: " ++ (show (pc state))) $
-    let op = getop state
-        state' =
-            --trace ("op: " ++ (show op)) $
-            do_op op state
-        out' = case output state'
-                of Just x -> x:out
-                   Nothing -> out
-        in
-        if running state'
-            then execute (state' {output=Nothing}) out'
-            --else trace (show $ mem state') $ out'
-            else out'
-
 -- a version of execute that blocks on output
 tillOutput state0 =
     let state = state0 {output=Nothing}
@@ -180,18 +164,6 @@ tillOutput state0 =
                     then tillOutput state'
                     else state'
 
--- a version of execute that blocks after readming input
-tillInput state =
-    let op = getop state
-        state' = do_op op state
-        in
-        case input state'
-           of Just x ->
-                if running state'
-                    then tillInput state'
-                    else state'
-              Nothing -> state'
-
 inOut state inp = tillOutput (state {input=inp})
 
 ints l = map (\x -> (read x :: Int)) l
@@ -203,31 +175,6 @@ initState src input = State { mem=parseSrc src
                             , input=input
                             , output=Nothing
                             , running=True}
-
-loopStep stateA stateB stateC stateD stateE inp =
-    let stateAo = inOut stateA inp
-        stateBo = inOut stateB (output stateAo)
-        stateCo = inOut stateC (output stateBo)
-        stateDo = inOut stateD (output stateCo)
-        stateEo = inOut stateE (output stateDo)
-    in
-        (stateAo, stateBo, stateCo, stateDo, stateEo)
-
-loop a b c d e =
-    let (aa,bb,cc,dd,ee) = loopStep a b c d e (output e)
-    in
-        if running aa
-        then loop aa bb cc dd ee
-        else output e
-
-amp src phases =
-    let init x = tillInput $ initState src (Just x)
-        [a, b, c, d, e] = map init phases
-        v = loop a b c d (e {output=Just 0})
-    in
-        case v of
-        Just x -> x
-        Nothing -> error "ended up with nothing"
 
 joystick ball paddle =
     (if ball > paddle then 1 else 0) - (if ball < paddle then 1 else 0)
