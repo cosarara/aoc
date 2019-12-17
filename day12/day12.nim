@@ -24,7 +24,7 @@ for tainted_line in lines(stdin):
     positions[i][j] = parseInt(xv[1])
   i += 1
 
-for step in 1..10:
+for step in 1..1000:
   for i in 0..2: # coord
     for j in 0..3: # moon
       for k in 0..3: # other moon
