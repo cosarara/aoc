@@ -275,6 +275,8 @@ class Arcade < Gosu::Window
     frontier.push(pstart)
     came_from = {}
     came_from[pstart] = nil
+    dist = {}
+    dist[pstart] = 0
 
     while not frontier.empty? do
       #puts ["l", frontier.length].to_s
@@ -287,11 +289,15 @@ class Arcade < Gosu::Window
         if not came_from.key?(pnext) then
           frontier.push(pnext)
           came_from[pnext] = curr
+          dist[pnext] = dist[curr] + 1
         end
       end
       #puts ["hrm", came_from, curr].to_s
     end
-    return nil if not pend
+    if not pend
+      puts dist.values.max
+      return
+    end
     curr = pend
     if came_from[curr].nil?
       binding.pry
@@ -329,6 +335,9 @@ class Arcade < Gosu::Window
         #puts path.to_s
         move(path[0])
         explore
+      end
+      if path.nil?
+        astar(@end, nil)
       end
     end
   end
