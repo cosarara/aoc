@@ -24,22 +24,22 @@ void compute(int *aa, unsigned int size) {
             b[i] = 0;
             unsigned int pi = 1;
             unsigned int pn = 0;
+            int p = base_pattern[pi];
             for (unsigned int j=i; j<size; j++, pn++) {
                 if (pn > i) {
                     pn = 0;
                     pi++;
-                    if (pi >= 4) pi=0;
-                    //if (pi >= 4) {
-                    //    pi=1;
-                    //    j+=i-1;
-                    //    pn--;
-                    //    //if (j>=size) break;
-                    //    continue;
-                    //}
+                    if (pi == 4) {
+                        pi = 0;
+                        j += i;
+                        pn = i;
+                    } else if (pi == 2) {
+                        j += i;
+                        pn = i;
+                    }
+                    p = base_pattern[pi];
                 }
-                //if (pi==1) b[i] += a[j];
-                //else if (pi==3) b[i] -= a[j];
-                b[i] += base_pattern[pi] * a[j];
+                b[i] += p * a[j];
             }
             b[i] = abs(b[i] % 10);
         }
