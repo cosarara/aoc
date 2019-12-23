@@ -19,11 +19,10 @@ void compute(int *aa, unsigned int size) {
     memset(b_arr, 0, sizeof(int) * 6500000); // NOLINT
     int *b = b_arr;
     int *a = aa;
+    unsigned int h = size / 2;
     for (unsigned int ni=0; ni<100; ni++) {
-        for (unsigned int i=0; i<size; i++) {
+        for (unsigned int i=0; i<h; i++) {
             b[i] = 0;
-            //unsigned int pn = 0;
-            //int p = 1;
             for (unsigned int j=i; j<size;) {
                 unsigned int k;
                 for (k=0; k<=i && j<size; j++, k++) {
@@ -36,6 +35,11 @@ void compute(int *aa, unsigned int size) {
                 j += i+1;
             }
             b[i] = abs(b[i] % 10);
+        }
+        int x = 0;
+        for (unsigned int i=size-1; i>h-1; i--) {
+            x += a[i];
+            b[i] = abs(x % 10);
         }
         int *tmp = b;
         b = a;
