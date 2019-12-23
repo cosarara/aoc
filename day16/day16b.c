@@ -21,21 +21,6 @@ void compute(int *aa, unsigned int size) {
     int *a = aa;
     unsigned int h = size / 2;
     for (unsigned int ni=0; ni<100; ni++) {
-        for (unsigned int i=0; i<h; i++) {
-            b[i] = 0;
-            for (unsigned int j=i; j<size;) {
-                unsigned int k;
-                for (k=0; k<=i && j<size; j++, k++) {
-                    b[i] += a[j];
-                }
-                j += i+1;
-                for (k=0; k<=i && j<size; j++, k++) {
-                    b[i] -= a[j];
-                }
-                j += i+1;
-            }
-            b[i] = abs(b[i] % 10);
-        }
         int x = 0;
         for (unsigned int i=size-1; i>h-1; i--) {
             x += a[i];
@@ -62,7 +47,12 @@ int main() {
         }
     }
 
-    compute(a, 650*10);
+    char stroffset[8] = {0};
+    memcpy (stroffset, input, 7); // NOLINT
+    unsigned int offset = atoi(stroffset);
+
+    compute(a, 650*10000);
     printv(a);
+    printv(&a[offset]);
     free(a);
 }
