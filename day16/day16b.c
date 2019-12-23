@@ -22,16 +22,18 @@ void compute(int *aa, unsigned int size) {
     for (unsigned int ni=0; ni<100; ni++) {
         for (unsigned int i=0; i<size; i++) {
             b[i] = 0;
-            unsigned int pn = 0;
-            int p = 1;
-            for (unsigned int j=i; j<size; j++) {
-                b[i] += p * a[j];
-                pn++;
-                if (pn > i) {
-                    pn = 0;
-                    p = -p;
-                    j += i+1;
+            //unsigned int pn = 0;
+            //int p = 1;
+            for (unsigned int j=i; j<size;) {
+                unsigned int k;
+                for (k=0; k<=i && j<size; j++, k++) {
+                    b[i] += a[j];
                 }
+                j += i+1;
+                for (k=0; k<=i && j<size; j++, k++) {
+                    b[i] -= a[j];
+                }
+                j += i+1;
             }
             b[i] = abs(b[i] % 10);
         }
