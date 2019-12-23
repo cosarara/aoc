@@ -10,7 +10,7 @@ void printv(int* a) {
 }
 
 void compute(int *aa, unsigned int size) {
-    int base_pattern[4] = {0, 1, 0, -1};
+    //int base_pattern[4] = {0, 1, 0, -1};
     int *b_arr = malloc(sizeof(int) * 6500000);
     if (b_arr == NULL) {
         fprintf(stderr, "couldn't allocate b");
@@ -22,24 +22,16 @@ void compute(int *aa, unsigned int size) {
     for (unsigned int ni=0; ni<100; ni++) {
         for (unsigned int i=0; i<size; i++) {
             b[i] = 0;
-            unsigned int pi = 1;
             unsigned int pn = 0;
-            int p = base_pattern[pi];
-            for (unsigned int j=i; j<size; j++, pn++) {
+            int p = 1;
+            for (unsigned int j=i; j<size; j++) {
+                b[i] += p * a[j];
+                pn++;
                 if (pn > i) {
                     pn = 0;
-                    pi++;
-                    if (pi == 4) {
-                        pi = 0;
-                        j += i;
-                        pn = i;
-                    } else if (pi == 2) {
-                        j += i;
-                        pn = i;
-                    }
-                    p = base_pattern[pi];
+                    p = -p;
+                    j += i+1;
                 }
-                b[i] += p * a[j];
             }
             b[i] = abs(b[i] % 10);
         }
