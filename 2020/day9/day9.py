@@ -33,19 +33,17 @@ for i in range(25, len(xs)):
 print('part b')
 target = y
 
-def find_sum(i):
-    for j in range(2, len(xs)-i):
-        r = xs[i:i+j]
-        #print(i, j, r[:5])
-        s = sum(r)
-        if s > target:
-            return None
-        if s == target:
-            return r
-
-for i in range(len(xs)):
-    r = find_sum(i)
-    if r is not None:
+s = 0
+e = 1
+x = xs[0]
+while e < len(xs):
+    if x == target:
+        r = xs[s:e]
         print('found', r, min(r)+max(r))
         break
+    x += xs[e]
+    e += 1
+    while x > target:
+        x -= xs[s]
+        s += 1
 
