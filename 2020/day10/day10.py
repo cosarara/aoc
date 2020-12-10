@@ -1,3 +1,5 @@
+from functools import cache
+
 with open('example') as f:
     ex = [int(i) for i in f.read().strip().split('\n')]
     ex.sort()
@@ -21,6 +23,8 @@ def do(inp):
     print(counts)
     print(counts[1] * counts[3])
 
+# memoization is great, slow suddenly is fast
+@cache
 def arrangements_slow(inp):
     if len(inp) == 1:
         return 1
@@ -36,6 +40,8 @@ def arrangements_slow(inp):
         pass
     return possibs
 
+# ok my brain can't actually come up with
+# a fast algorithm
 def arrangements(inp):
     if len(inp) == 1:
         return 1
@@ -44,7 +50,8 @@ def arrangements(inp):
     #possibs = arrangements(inp[1:])
     try:
         if inp[3] - curr <= 3:
-            return 4 * arrangements(inp[3:])
+            x = arrangements(inp[3:])
+            return x + 2*x + 4*x
     except IndexError:
         pass
     try:
@@ -57,12 +64,16 @@ def arrangements(inp):
 do(ex)
 do(inp)
 
-#def t(i):
-#    print(arrangements_slow(i), arrangements(i))
-#(t([4,5,6]))
-#(t([3,4,5,6]))
-#(t([2,3,4,5,6]))
-#(t([0,1,2,3,4,5,6]))
+def t(i):
+    print(arrangements_slow(tuple(i)), arrangements(i))
+(t([4,5,6]))
+(t([3,4,5,6]))
+(t([2,3,4,5,6]))
+(t([0,1,2,3,4,5,6]))
+(t([4,5]))
+(t([3,4,5]))
+(t([2,3,4,5]))
+(t([0,1,2,3,4,5]))
 #t([0]+ex)
-print(arrangements_slow([0]+ex))
-#print(arrangements([0]+inp))
+print(arrangements_slow(tuple([0]+ex)))
+print(arrangements_slow(tuple([0]+inp)))
