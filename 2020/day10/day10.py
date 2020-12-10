@@ -26,12 +26,12 @@ def arrangements_slow(inp):
         return 1
     curr = inp[0]
     #the next will always be ok, but what about the others
-    possibs = arrangements(inp[1:])
+    possibs = arrangements_slow(inp[1:])
     try:
         if inp[2] - curr <= 3:
-            possibs += arrangements(inp[2:])
+            possibs += arrangements_slow(inp[2:])
         if inp[3] - curr <= 3:
-            possibs += arrangements(inp[3:])
+            possibs += arrangements_slow(inp[3:])
     except IndexError:
         pass
     return possibs
