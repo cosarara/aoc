@@ -30,43 +30,67 @@ NEWLINE
 ( cat the file yay )
 ( ;file ;print-word JSR2 )
 
-( ------------------ ACTUAL DAY 01 CODE -------------- )
-;file ;parse-dec JSR2
+( ------------------ ACTUAL DAY 01b CODE -------------- )
 
 ( ;prevstr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE )
 
-;prev STA2
+( -- init -- )
+;file ;parse-dec JSR2 ;window/a STA2
+
+;parse-dec JSR2 ;window/b STA2
+
+;parse-dec JSR2 ;window/c STA2
+
+;parse-dec JSR2 ;window/d STA2
+
+;inputptr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE
+
+%SPACE { #20 .Console/write DEO }
+;prevstr ;print-word JSR2
+        ;window/a LDA2 ;print-dec2 JSR2 SPACE
+        ;window/b LDA2 ;print-dec2 JSR2 SPACE
+        ;window/c LDA2 ;print-dec2 JSR2 NEWLINE
+;currstr ;print-word JSR2
+        ;window/b LDA2 ;print-dec2 JSR2 SPACE
+        ;window/c LDA2 ;print-dec2 JSR2 SPACE
+        ;window/d LDA2 ;print-dec2 JSR2 NEWLINE
+
+;inputptr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE
+    #ff .System/dbg DEO
 
 @while
-    ( stack holds str* )
-    ( ;inputptr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE )
+    ( ;startmsg ;print-word JSR2 NEWLINE )
+    ;window/b LDA2 ;window/c LDA2 ADD2 ;window/d LDA2 ADD2
+    ;currstr ;print-word JSR2 ;print-dec2k JSR2 NEWLINE
+    ;window/a LDA2 ;window/b LDA2 ADD2 ;window/c LDA2 ADD2
+    ;prevstr ;print-word JSR2 ;print-dec2k JSR2 NEWLINE
 
-    ;parse-dec JSR2
-    ( ;currstr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE )
-
-    ORAk
-    ( if curr is 0, exit )
-    ,&cont JCNk
-    ;out JMP2
-    &cont
-    POP2
-
-    ;curr STA2
-
-    ( stack holds str* )
-    ( ;inputptr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE )
-
-    ;curr LDA2 ;prev LDA2 GTH2 ,&increment JCN
+    GTH2 ,&increment JCN
     ,&end JMP
 
     &increment
     ;count LDA2 INC2 ;count STA2
 
     &end
-    ;curr LDA2 ;prev STA2
+    ;window/b LDA2 ;window/a STA2
+    ;window/c LDA2 ;window/b STA2
+    ;window/d LDA2 ;window/c STA2
 
+      (  ;inputptr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE )
+
+    ;parse-dec JSR2 DUP2
+        ;window/d STA2
+
+    ;newval ;print-word JSR2 ;print-dec2k JSR2 NEWLINE
+    ORA
+    ( ;printbytek JSR2 NEWLINE )
+    ,&cont JCN ( if curr is 0, exit )
+        ;out JMP2
+    &cont
+    ( ;continuing ;print-word JSR2 NEWLINE )
+
+    ( #ff .System/dbg DEO )
 ;while JMP2
-
 @out
 
 ;endmsg ;print-word JSR2
@@ -81,8 +105,11 @@ BRK
 ( -------------- GLOBALS ------------ )
 
 @count $2
-@prev $2
-@curr $2
+@window
+&a $2
+&b $2
+&c $2
+&d $2
 
 ( -------------- STRINGS ------------ )
 
@@ -92,6 +119,8 @@ BRK
 @countstr "count: 20 00
 @prevstr "prev: 20 00
 @currstr "curr: 20 00
+@newval "new 20 "value: 20 00
+@continuing "continuing 00
 @inputptr "inputptr: 20 00
 @filename "input.txt 00
 

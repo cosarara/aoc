@@ -20,8 +20,8 @@
 #ff .System/dbg DEO
 
 %NEWLINE { #0a .Console/write DEO }
-#ffff ;print-dec2 JSR2 NEWLINE
-#00ff ;print-dec2 JSR2 NEWLINE
+#ffff ;print-dec2k JSR2 NEWLINE
+#00ff ;print-dec2k JSR2 NEWLINE
 #ff .System/dbg DEO
 
 ;endmsg ;print-word JSR2
@@ -71,7 +71,7 @@ JMP2r
 JMP2r
 
 %HEXNIB { ;hexchars ADD2 LDA .Console/write DEO }
-@print-dec2 ( x )
+@print-dec2k ( x )
     DUP2 DUP2
 
     #2710 DIV2
