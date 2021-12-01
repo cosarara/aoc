@@ -60,28 +60,31 @@ NEWLINE
 
 @while
     ( ;startmsg ;print-word JSR2 NEWLINE )
+    ( add the 2 slices )
     ;window/b LDA2 ;window/c LDA2 ADD2 ;window/d LDA2 ADD2
     ;currstr ;print-word JSR2 ;print-dec2k JSR2 NEWLINE
     ;window/a LDA2 ;window/b LDA2 ADD2 ;window/c LDA2 ADD2
     ;prevstr ;print-word JSR2 ;print-dec2k JSR2 NEWLINE
 
     GTH2 ,&increment JCN
-    ,&end JMP
+        ,&end JMP
 
     &increment
-    ;count LDA2 INC2 ;count STA2
+        ;count LDA2 INC2 ;count STA2
 
     &end
+    ( slide the window )
     ;window/b LDA2 ;window/a STA2
     ;window/c LDA2 ;window/b STA2
     ;window/d LDA2 ;window/c STA2
 
-      (  ;inputptr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE )
+    (  ;inputptr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE )
 
     ;parse-dec JSR2 DUP2
         ;window/d STA2
 
     ;newval ;print-word JSR2 ;print-dec2k JSR2 NEWLINE
+    ( check if we reached the end )
     ORA
     ( ;printbytek JSR2 NEWLINE )
     ,&cont JCN ( if curr is 0, exit )
