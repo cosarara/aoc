@@ -130,12 +130,12 @@ BRK
 ( -------------- LIB ------------ )
 
 @print-word ( word* -- )
-	&while
-		LDAk .Console/write DEO
-		INC2 ( at the top of the stack is the word pointer, next char )
+    &while
+        LDAk .Console/write DEO
+        INC2 ( at the top of the stack is the word pointer, next char )
         LDAk  ( actually load said char, keeping the pointer )
         ,&while JCN ( here the char is used for the condition )
-	POP2
+    POP2
 JMP2r
 
 @hexchars "0123456789ABCDEF
