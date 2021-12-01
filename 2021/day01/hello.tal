@@ -1,0 +1,22 @@
+|00 @System     &vector $2 &pad     $6 &r      $2 &g     $2 &b     $2 &dbg $1 &hlt
+|10 @Console    &vector $2 &read    $1 &pad    $5 &write $1 
+|20 @Screen     &vector $2 &width   $2 &height $2 &auto  $1 &pad   $1 &x     $2 &y $2 &addr $2 &pixel $1 &sprite $1
+|80 @Controller &vector $2 &button  $1 &key    $1
+|90 @Mouse      &vector $2 &x       $2 &y      $2 &state $1 &chord $1
+|a0 @File       &vector $2 &success $2 &offset $2 &pad   $2 &name  $2 &length $2 &load $2 &save $2
+
+|0100
+#2ce9 .System/r DEO2
+#01c0 .System/g DEO2
+#2ce5 .System/b DEO2
+
+
+#00 #0a LIT 'o LIT 'l LIT 'l LIT 'e LIT 'h
+&loop
+.Console/write DEOk
+POP
+#0a NEQ
+,&loop JCN
+#ff .System/dbg DEO
+#01 .System/hlt DEO
+BRK

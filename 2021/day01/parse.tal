@@ -1,0 +1,131 @@
+|00 @System     &vector $2 &pad     $6 &r      $2 &g     $2 &b     $2 &dbg $1 &hlt
+|10 @Console    &vector $2 &read    $1 &pad    $5 &write $1
+|20 @Screen     &vector $2 &width   $2 &height $2 &auto  $1 &pad   $1 &x     $2 &y $2 &addr $2 &pixel $1 &sprite $1
+|80 @Controller &vector $2 &button  $1 &key    $1
+|90 @Mouse      &vector $2 &x       $2 &y      $2 &state $1 &chord $1
+|a0 @File       &vector $2 &success $2 &offset $2 &pad   $2 &name  $2 &length $2 &read $2 &write $2
+
+|0100
+#2ce9 .System/r DEO2
+#01c0 .System/g DEO2
+#2ce5 .System/b DEO2
+
+;startmsg ;print-word JSR2
+%NEWLINE { #0a .Console/write DEO }
+
+( ------------------ FILE READING BUSINES -------------- )
+#ff00 .File/length DEO2
+;filename .File/name DEO2
+;file .File/read DEO2
+
+.File/success DEI2
+
+( show success code )
+;bytes-read-str ;print-word JSR2
+;printbyte2 JSR2 NEWLINE
+
+( cat the file yay )
+;file ;print-word JSR2
+
+( print the file start address )
+;file ;printbyte2 JSR2 NEWLINE
+
+( parse 1 number )
+;file ;parse-dec JSR2
+
+( print it )
+;printbyte2 JSR2 NEWLINE
+
+;separator ;print-word JSR2
+
+( parse the next number )
+;parse-dec JSR2
+
+( print it )
+;printbyte2 JSR2 NEWLINE
+( ;parse-dec/total LDA2 ;printbyte2 JSR2 NEWLINE )
+
+;endmsg ;print-word JSR2
+
+#01 .System/hlt DEO
+BRK
+
+@printbytek
+    ( str_left_nib = hexchars[a >> 4] )
+    DUP
+    #00
+    SWP
+    #04 SFT
+    ;hexchars ADD2 LDA .Console/write DEO
+    DUP
+    #00
+    SWP
+    #0f AND
+    ;hexchars ADD2 LDA .Console/write DEO
+    ( #ff .System/dbg DEO )
+JMP2r
+
+@printbyte
+    ;printbytek JSR2
+    POP
+JMP2r
+
+@printbyte2k
+    SWP
+    ;printbytek JSR2
+    SWP
+    ;printbytek JSR2
+JMP2r
+
+@printbyte2
+    ;printbyte2k JSR2
+    POP2
+JMP2r
+
+@print-word ( word* -- )
+	&while
+		LDAk .Console/write DEO
+		INC2 ( at the top of the stack is the word pointer, next char )
+        LDAk  ( actually load said char, keeping the pointer )
+        ,&while JCN ( here the char is used for the condition )
+	POP2
+JMP2r
+
+@parse-dec ( str* -- str'* val )
+    #0000 ,&total STR2
+
+    &while
+
+        LDAk DUP ( 1 to compare, 1 to take )
+        #30 LTH ,&end0 JCN ( if < 0x30 return 0 )
+        #30 SUB ( get a number for the 1st digit )
+        #00 SWP ( expand to word )
+        ,&total LDR2 #000a MUL2 ADD2 ,&total STR2 ( add to total )
+
+        ( try to get a 2nd character )
+        INC2
+
+    ,&while JMP
+
+    &end0
+    POP ( pop the end char )
+    ( POP2 pop the input address )
+    INC2
+    ,&total LDR2 ( return value )
+JMP2r
+&total $2
+
+@startmsg "hello 20 "there 20 "why 20 "no 20 "spaces 20 "tho 0a 00
+@step1 "step1 0a 00
+@step2 "step2 0a 00
+@step3 "step3 0a 00
+@step4 "step4 0a 00
+@step5 "step5 0a 00
+@step6 "step6 0a 00
+@separator "--------------------------- 0a 00
+@endmsg "ending 0a 00
+@bytes-read-str "bytes 20 "read: 20 00
+@hexchars "0123456789ABCDEF
+@filename "a.txt
+
+@file
