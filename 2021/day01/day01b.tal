@@ -44,12 +44,9 @@ NEWLINE
     ;parse-dec JSR2
     ( ;currstr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE )
 
-    ORAk
+    ORAk #00 EQU
     ( if curr is 0, exit )
-    ,&cont JCNk
-    ;out1 JMP2
-    &cont
-    POP2
+    ;out1 JCN2
 
     ;curr STA2
 
@@ -131,12 +128,8 @@ NEWLINE
         ;window/d STA2
 
     ( ;newval ;print-word JSR2 ;print-dec2k JSR2 NEWLINE )
-    ( check if we reached the end )
-    ORA
-    ( ;printbytek JSR2 NEWLINE )
-    ,&cont JCN ( if curr is 0, exit )
-        ;out JMP2
-    &cont
+    ( if curr is 0, exit )
+    ORA #00 EQU ;out JCN2
     ( ;continuing ;print-word JSR2 NEWLINE )
 
     ( #ff .System/dbg DEO )
