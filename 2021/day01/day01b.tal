@@ -10,7 +10,7 @@
 #01c0 .System/g DEO2
 #2ce5 .System/b DEO2
 
-;startmsg ;print-word JSR2
+;startmsg1a ;print-word JSR2
 
 ;filename ;print-word JSR2
 %NEWLINE { #0a .Console/write DEO }
@@ -30,8 +30,56 @@ NEWLINE
 ( cat the file yay )
 ( ;file ;print-word JSR2 )
 
+( ------------------ ACTUAL DAY 01 CODE -------------- )
+;file ;parse-dec JSR2
+
+( ;prevstr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE )
+
+;prev STA2
+
+@while1
+    ( stack holds str* )
+    ( ;inputptr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE )
+
+    ;parse-dec JSR2
+    ( ;currstr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE )
+
+    ORAk
+    ( if curr is 0, exit )
+    ,&cont JCNk
+    ;out1 JMP2
+    &cont
+    POP2
+
+    ;curr STA2
+
+    ( stack holds str* )
+    ( ;inputptr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE )
+
+    ;curr LDA2 ;prev LDA2 GTH2 ,&increment JCN
+    ,&end JMP
+
+    &increment
+    ;count LDA2 INC2 ;count STA2
+
+    &end
+    ;curr LDA2 ;prev STA2
+
+;while1 JMP2
+
+@out1
+
+;endmsg ;print-word JSR2
+
+;countstr ;print-word JSR2
+( ;count LDA2 ;printbyte2 JSR2 NEWLINE )
+;count LDA2 ;print-dec2 JSR2 NEWLINE
+
+#0000 ;count STA2
+
 ( ------------------ ACTUAL DAY 01b CODE -------------- )
 
+;startmsg1b ;print-word JSR2
 ( ;prevstr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE )
 
 ( -- init -- )
@@ -43,7 +91,7 @@ NEWLINE
 
 ;parse-dec JSR2 ;window/d STA2
 
-;inputptr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE
+( ;inputptr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE )
 
 %SPACE { #20 .Console/write DEO }
 ;prevstr ;print-word JSR2
@@ -55,16 +103,15 @@ NEWLINE
         ;window/c LDA2 ;print-dec2 JSR2 SPACE
         ;window/d LDA2 ;print-dec2 JSR2 NEWLINE
 
-;inputptr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE
-    #ff .System/dbg DEO
+( ;inputptr ;print-word JSR2 ;printbyte2k JSR2 NEWLINE
+    #ff .System/dbg DEO )
 
 @while
-    ( ;startmsg ;print-word JSR2 NEWLINE )
     ( add the 2 slices )
     ;window/b LDA2 ;window/c LDA2 ADD2 ;window/d LDA2 ADD2
-    ;currstr ;print-word JSR2 ;print-dec2k JSR2 NEWLINE
+    ( ;currstr ;print-word JSR2 ;print-dec2k JSR2 NEWLINE )
     ;window/a LDA2 ;window/b LDA2 ADD2 ;window/c LDA2 ADD2
-    ;prevstr ;print-word JSR2 ;print-dec2k JSR2 NEWLINE
+    ( ;prevstr ;print-word JSR2 ;print-dec2k JSR2 NEWLINE )
 
     GTH2 ,&increment JCN
         ,&end JMP
@@ -83,7 +130,7 @@ NEWLINE
     ;parse-dec JSR2 DUP2
         ;window/d STA2
 
-    ;newval ;print-word JSR2 ;print-dec2k JSR2 NEWLINE
+    ( ;newval ;print-word JSR2 ;print-dec2k JSR2 NEWLINE )
     ( check if we reached the end )
     ORA
     ( ;printbytek JSR2 NEWLINE )
@@ -102,12 +149,14 @@ NEWLINE
 ( ;count LDA2 ;printbyte2 JSR2 NEWLINE )
 ;count LDA2 ;print-dec2 JSR2 NEWLINE
 
-#01 .System/hlt DEO
+( #01 .System/hlt DEO )
 BRK
 
 ( -------------- GLOBALS ------------ )
 
 @count $2
+@prev $2
+@curr $2
 @window
 &a $2
 &b $2
@@ -116,7 +165,8 @@ BRK
 
 ( -------------- STRINGS ------------ )
 
-@startmsg "hello 20 "there! 20 "why 20 "no 20 "spaces 20 "tho 0a 00
+@startmsg1a "running 20 "day 20 "1A... 0a 00
+@startmsg1b "running 20 "day 20 "1B... 0a 00
 @endmsg "done! 0a 00
 @bytes-read-str "bytes 20 "read: 20 00
 @countstr "count: 20 00
@@ -230,5 +280,7 @@ JMP2r
     ;print-dec2k JSR2
     POP2
 JMP2r
+
+@star-icn 0818 7e3c 1824 4200
 
 @file
