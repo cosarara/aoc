@@ -50,9 +50,38 @@ def zero_fish_rec(days, verbose=False):
     return (zero_fish_rec(days-7) +
             zero_fish_rec(days-9))
 
+def zero_fish_iter(days, verbose=False):
+    """ the iterative solution here should be optimal;
+    it could be made faster by rolling around a fixed-size
+    array properly initialized to 1s and rolling around
+    only the indices."""
+    if days == 0:
+        return 1
+    window = []
+    for i in range(days):
+        # 7 takes -2st and 0th = 2
+        # 8 takes -1st and 1st = 3
+        # 9 takes 0th and 2nd = 3
+        # 10 takes 1st and 3rd = 4
+        i = len(window) - 9
+        j = len(window) - 7
+        if i < 0:
+            a = 1
+        else:
+            a = window[i]
+        if j < 0:
+            b = 1
+        else:
+            b = window[j]
+        window.append(a+b)
+        #if len(window) > 9: # popping makes it slow actually
+        #    window.pop(0)
+    return window[-1]
+
 def part2():
     state = get_input()
-    print(n_fish(zero_fish_rec, state, 256))
+    #print(n_fish(zero_fish_rec, state, 256))
+    print(n_fish(zero_fish_iter, state, 256))
 
 if __name__ == "__main__":
     part1()
