@@ -1,0 +1,4 @@
+#!/bin/rc
+mk
+./aoc1
+./aoc1.2 <input1 | sort -r | sed 3q | ./aoc1.2
