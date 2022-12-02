@@ -1,0 +1,15 @@
+</$objtype/mkfile
+
+all:V:	A B
+
+clean:V:
+		rm *.$O A B
+
+A:	A.$O
+		$LD $LDFLAGS -o $target $prereq
+
+B:	B.$O
+		$LD $LDFLAGS -o $target $prereq
+
+%.$O:	%.c
+		$CC $CFLAGS $stem.c
