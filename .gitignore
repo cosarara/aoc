@@ -6,6 +6,10 @@
 # unignore directories
 !*/
 
+# Unignore example and input files
+!input
+!example
+
 *.o
 *.hi
 vendor/
