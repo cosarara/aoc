@@ -10,6 +10,7 @@
 (var grid [])
 (var start nil)
 (var goal nil)
+(var as {})
 (local graph [])
 
 (lambda load-input [?filename]
@@ -23,6 +24,7 @@
     (each [x char (ipairs line)]
       (when (= char "S") (set start (tup [x y])))
       (when (= char "E") (set goal (tup [x y])))
+      (when (= char "a") (tset as (tup [x y]) true))
       (local outs (icollect [_ [xx yy] (ipairs [[(- x 1) y] [(+ x 1) y]
                                                 [x (- y 1)] [x (+ y 1)]])]
                       (if (and (>= xx 1) (>= yy 1)
@@ -30,8 +32,11 @@
                           (do
                             (local nei (. (. grid yy) xx))
                             (local out (tup [xx yy]))
-                            (if (= nei "E") (if (= char "z") out)
-                                (or (= char "S") (<= (nei:byte) (+ (char:byte) 1)))
+                            (if (= char "E")
+                                (if (= nei "z") out)
+                                (or (= char "S")
+                                    ; reversed because we'll walk down
+                                    (<= (char:byte) (+ (nei:byte) 1)))
                                 out)))))
       (tset graph (tup [x y]) outs)))
   graph)
@@ -50,12 +55,12 @@
 
 (local bestpaths {})
 (var path [(tup [1 1])])
-(var bestpath nil)
+(var bestpath [])
 
 (var iters 0)
 (var visited {})
 (fn walk [?coro]
-  (local unvisited [[start]])
+  (local unvisited [[goal]])
   (var best-path nil)
   (set visited {})
 
@@ -69,7 +74,7 @@
       (local possibilities (. graph current))
 
       (each [_ node (ipairs possibilities)]
-        (when (= goal node)
+        (when (. as node)
           (set best-path current-path))
         (when (not (. visited node))
           (local new (icollect [_ x (ipairs current-path)] x))
@@ -88,7 +93,7 @@
                                   (print (length bestpath)))))
 
 (var dtotal 0)
-(var stopped true)
+(var stopped false)
 (var work-finished false)
 (fn love.update [dt]
   (set dtotal (+ dtotal dt))
@@ -128,9 +133,15 @@
       (love.graphics.setColor 1 1 1)
       (love.graphics.print char (* 20 x) (+ 10 (* 20 y)))
       (love.graphics.setColor 0 0 1)
-      (each [_ pair (ipairs (or bestpath []))]
+      (each [i pair (ipairs (or bestpath []))]
         (when (= pair (tup [x y]))
-          (square x y)))
+          ;(love.graphics.setColor 0 0 1)
+          (square x y)
+          ;(love.graphics.setColor 1 1 1)
+          ;(love.graphics.print (.. i "")
+          ;                     (- (scx x) 3)
+          ;                     (+ (scy y) (if (= 0 (% i 2)) -3 6)))
+          ))
       (love.graphics.setColor 1 0 0)
       (when path
         (each [_ pair (ipairs (or path []))]
@@ -138,8 +149,7 @@
             (square x y))))))
   (when bestpath
     (love.graphics.setColor 1 1 1)
-    (love.graphics.print (.. "best path length: " (length bestpath)
-                             ".  Press [2] for part 2") 10 10))
+    (love.graphics.print (.. "best path length: " (length bestpath)) 10 10))
   (when stopped
     (love.graphics.setColor 1 1 1)
     (love.graphics.print "stopped; press [space] to start." 10 10)))
@@ -147,9 +157,6 @@
 (local reload (require "reload.fnl"))
 (fn love.keypressed [key]
   (when (= "f5" key)
-    (let [name "game.fnl"]
-      (reload name)))
-  (when (= "2" key)
     (let [name "game2.fnl"]
       (reload name)))
   (when (= "space" key)
@@ -157,4 +164,4 @@
   (when (= "q" key)
     (love.event.quit)))
 
-(print "game.fnl loaded!")
+(print "game2.fnl loaded!")
