@@ -1,0 +1,3 @@
+
+main = do
+  print root
