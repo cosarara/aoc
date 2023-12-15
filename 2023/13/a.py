@@ -7,7 +7,8 @@ patterns = [p.split() for p in patterns]
 #print(patterns)
 
 def find_mirror(p):
-    for y in range(1, len(p) - 1):
+    mirrors = []
+    for y in range(1, len(p)):
         l = min(y, len(p) - y)
         #print(y, ': length', l, ':', y-l, 'to', y, 'to', y+l)
         #if y == 9:
@@ -17,29 +18,33 @@ def find_mirror(p):
         #    print()
         #    print(p[y-l:y] == list(reversed(p[y:y+l])))
         if p[y-l:y] == list(reversed(p[y:y+l])):
-            return y
-    return None
+            mirrors.append(y)
+    if len(mirrors) > 1:
+        print(mirrors)
+        raise Exception("multiple mirrors")
+    return mirrors[0] if mirrors else None
 
-def find_vertical_mirror(p):
+def transpose(p):
     lines = []
     for x in range(len(p[0])):
         lines.append(''.join(l[x] for l in p))
-
-    print('\n' + '\n'.join(f'{x+1:2} '+l for x, l in enumerate(lines)) + '\n')
-    return find_mirror(lines)
+    return lines
 
 total = 0
 for p in patterns:
-    print('\n' + '\n'.join(f'{x+1:2} '+l for x, l in enumerate(p)) + '\n')
     h = find_mirror(p)
+    v = find_mirror(transpose(p))
+    print('\n' + '\n'.join(f'{x+1:2} '+l+('<' if h and x in (h-1, h) else '') for x, l in enumerate(p)))
+    if v:
+        total += v
+        print(" "*3+" "*(v-1)+"^^")
+        print(' '*3 + ''.join(str(i%10) for i in range(len(p[0]))))
+        print('vertical mirror at', v)
     if h:
         print('horizontal mirror at', h)
         total += h * 100
-    v = find_vertical_mirror(p)
-    if v:
-        total += v
-        #print(" "*(v-1)+"^^")
-        print('vertical mirror at', v)
+    if not h and not v:
+        print('nothing')
 
     print()
 
