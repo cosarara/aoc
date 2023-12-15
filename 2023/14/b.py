@@ -14,6 +14,8 @@ for y, row in enumerate(textgrid):
         if char == 'O':
             rounds.add((x, y))
 
+squares = frozenset(squares)
+
 def pgrid(squares, rounds):
     for y in range(h):
         for x in range(w):
@@ -31,10 +33,8 @@ def roll_north(rounds, squares):
         for x in range(w):
             if (x, y) in rounds:
                 rounds.remove((x, y))
-                yy = y
-                while True:
-                    yy -= 1
-                    if yy < 0 or (x, yy) in squares|rounds:
+                for yy in range(y, -1, -1):
+                    if (x, yy) in squares or (x, yy) in rounds:
                         yy += 1
                         break
                 rounds.add((x, yy))
@@ -44,10 +44,8 @@ def roll_south(rounds, squares):
         for x in range(w):
             if (x, y) in rounds:
                 rounds.remove((x, y))
-                yy = y
-                while True:
-                    yy += 1
-                    if yy >= h or (x, yy) in squares|rounds:
+                for yy in range(y, h):
+                    if (x, yy) in squares or (x, yy) in rounds:
                         yy -= 1
                         break
                 rounds.add((x, yy))
@@ -57,10 +55,8 @@ def roll_west(rounds, squares):
         for y in range(h):
             if (x, y) in rounds:
                 rounds.remove((x, y))
-                xx = x
-                while True:
-                    xx -= 1
-                    if xx < 0 or (xx, y) in squares|rounds:
+                for xx in range(x, -1, -1):
+                    if (xx, y) in squares or (xx, y) in rounds:
                         xx += 1
                         break
                 rounds.add((xx, y))
@@ -70,10 +66,8 @@ def roll_east(rounds, squares):
         for y in range(h):
             if (x, y) in rounds:
                 rounds.remove((x, y))
-                xx = x
-                while True:
-                    xx += 1
-                    if xx >= w or (xx, y) in squares|rounds:
+                for xx in range(x, w):
+                    if (xx, y) in squares or (xx, y) in rounds:
                         xx -= 1
                         break
                 rounds.add((xx, y))
@@ -101,13 +95,13 @@ for i in range(1000000000):
         rounds = set(inp)
         break
 
-    print('rolling north')
+    #print('rolling north')
     roll_north(rounds, squares)
-    print('rolling west')
+    #print('rolling west')
     roll_west(rounds, squares)
-    print('rolling south')
+    #print('rolling south')
     roll_south(rounds, squares)
-    print('rolling east')
+    #print('rolling east')
     roll_east(rounds, squares)
 
     #print(load(rounds))
